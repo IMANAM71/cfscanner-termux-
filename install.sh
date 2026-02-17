@@ -2,15 +2,13 @@
 set -e
 
 clear
-echo -e "\033[1;36m"
-echo "╔════════════════════════════════════════════╗"
-echo "║     Cloudflare IP Scanner Installer        ║"
-echo "║          Termux Optimized - 2025           ║"
-echo "╚════════════════════════════════════════════╝"
-echo -e "\033[0m"
+echo "============================================"
+echo "     Cloudflare IP Scanner Installer       "
+echo "          Termux Optimized - 2025          "
+echo "============================================"
 
 if [[ ! -d "/data/data/com.termux" ]]; then
-    echo -e "\033[1;31mاین اسکریپت فقط در Termux اجرا می‌شود!\033[0m"
+    echo "This script runs only in Termux!"
     exit 1
 fi
 
@@ -18,17 +16,20 @@ INSTALL_DIR="$HOME/.cfscan"
 BIN_DIR="$HOME/.shortcuts"
 SCRIPT_NAME="cfscan"
 
-echo -e "\n\033[1;33mنصب پیش‌نیازها ...\033[0m"
+echo "Updating packages and installing prerequisites..."
 pkg update -y && pkg upgrade -y >/dev/null 2>&1
 pkg install python git -y >/dev/null 2>&1
 
-pip install --upgrade pip -q
+# pip upgrade removed - Termux manages it via pkg
+# No need for pip install --upgrade pip
+
+echo "Installing Python libraries..."
 pip install requests icmplib -q
 
 mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
-echo -e "\033[1;33mدانلود اسکریپت اصلی ...\033[0m"
-curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux-/main/scanner.py -o "$INSTALL_DIR/scanner.py"
+echo "Downloading main script..."
+curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/scanner.py -o "$INSTALL_DIR/scanner.py"
 
 chmod +x "$INSTALL_DIR/scanner.py"
 
@@ -38,17 +39,21 @@ python \( HOME/.cfscan/scanner.py " \)@"
 EOF
 
 chmod +x "$BIN_DIR/$SCRIPT_NAME"
-# ایجاد فایل نمونه اگر وجود نداشته باشد
+
+# Create sample ip.txt if not exists
 if [ ! -f "ip.txt" ]; then
-    echo -e "\033[1;33mفایل ip.txt پیدا نشد → کپی نمونه پیش‌فرض ...\033[0m"
-    curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/ip.txt -o "ip.txt"
-    echo -e "\033[1;32mفایل ip.txt با رنج‌های پیشنهادی ساخته شد.\033[0m"
-    echo "می‌تونی با دستور زیر ویرایش کنی:"
-    echo "    nano ip.txt"
+    echo "ip.txt not found → copying default sample..."
+    curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/ip.txt.example -o "ip.txt"
+    echo "ip.txt created with suggested ranges."
+    echo "You can edit it with: nano ip.txt"
 else
-    echo -e "\033[1;36mفایل ip.txt از قبل وجود دارد → از همان استفاده می‌شود.\033[0m"
+    echo "ip.txt already exists → using your version."
 fi
-echo -e "\n\033[1;32mنصب تمام شد ✓\033[0m"
-echo -e "دستور اجرا:   \033[1;42m cfscan \033[0m"
-echo -e "\nفایل ip.txt رو توی پوشه فعلی بساز"
-echo -e "آپدیت دوباره: bash <(curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux-/main/install.sh)"
+
+echo ""
+echo "Installation completed successfully."
+echo "Run with:   cfscan"
+echo ""
+echo "Make sure ip.txt is in current directory (or use the sample created)"
+echo "Update script: bash <(curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/install.sh)"
+echo ""
