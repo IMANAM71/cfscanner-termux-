@@ -28,7 +28,7 @@ pip install requests icmplib -q
 mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
 echo -e "\033[1;33mدانلود اسکریپت اصلی ...\033[0m"
-curl -fsSL https://raw.githubusercontent.com/IMANAM71/cf-ip-scanner-termux/main/scanner.py -o "$INSTALL_DIR/scanner.py"
+curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/scanner.py -o "$INSTALL_DIR/scanner.py"
 
 chmod +x "$INSTALL_DIR/scanner.py"
 
@@ -38,8 +38,17 @@ python \( HOME/.cfscan/scanner.py " \)@"
 EOF
 
 chmod +x "$BIN_DIR/$SCRIPT_NAME"
-
+# ایجاد فایل نمونه اگر وجود نداشته باشد
+if [ ! -f "ip.txt" ]; then
+    echo -e "\033[1;33mفایل ip.txt پیدا نشد → کپی نمونه پیش‌فرض ...\033[0m"
+    curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/ip.txt -o "ip.txt"
+    echo -e "\033[1;32mفایل ip.txt با رنج‌های پیشنهادی ساخته شد.\033[0m"
+    echo "می‌تونی با دستور زیر ویرایش کنی:"
+    echo "    nano ip.txt"
+else
+    echo -e "\033[1;36mفایل ip.txt از قبل وجود دارد → از همان استفاده می‌شود.\033[0m"
+fi
 echo -e "\n\033[1;32mنصب تمام شد ✓\033[0m"
 echo -e "دستور اجرا:   \033[1;42m cfscan \033[0m"
 echo -e "\nفایل ip.txt رو توی پوشه فعلی بساز"
-echo -e "آپدیت دوباره: bash <(curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux-/main/install.sh)"
+echo -e "آپدیت دوباره: bash <(curl -fsSL https://raw.githubusercontent.com/IMANAM71/cfscanner-termux/main/install.sh)"
